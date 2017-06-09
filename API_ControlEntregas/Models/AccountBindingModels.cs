@@ -53,6 +53,9 @@ namespace API_ControlEntregas.Models
         [Required]
         [Display(Name = "fkCliente")]
         public int fkCliente { get; set; }
+
+        [Display(Name = "Enabled")]
+        public bool Enabled { get; set; }
     }
 
     public class RegisterExternalBindingModel

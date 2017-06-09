@@ -16,11 +16,13 @@ using Microsoft.Owin.Security.OAuth;
 using API_ControlEntregas.Models;
 using API_ControlEntregas.Providers;
 using API_ControlEntregas.Results;
+using System.Net;
 
 namespace API_ControlEntregas.Controllers
 {
     [Authorize]
-    [RoutePrefix("api/Clientes/{fkCliente}/Usuarios")]
+    [RoutePrefix("api/Account")]
+    //[RoutePrefix("api/Clientes/{fkCliente}/Usuarios")]
     public class AccountController : ApiController
     {
         private const string LocalLoginProvider = "Local";
@@ -321,14 +323,14 @@ namespace API_ControlEntregas.Controllers
         // POST api/Account/Register
         [AllowAnonymous]
         [Route("Register")]
-        public async Task<IHttpActionResult> Register(RegisterBindingModel model, int fkCliente)
+        public async Task<IHttpActionResult> Register(RegisterBindingModel model/*, int fkCliente */)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email , fkCliente = fkCliente};
+            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email , fkCliente = model.fkCliente, Enabled = model.Enabled};
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
@@ -338,6 +340,56 @@ namespace API_ControlEntregas.Controllers
             }
 
             return Ok();
+        }
+
+        //PUT API/Account/Disable
+        [AllowAnonymous]
+        [HttpPut]
+        [Route("Disable")]
+        public HttpResponseMessage Disable([FromBody] IDUser idUser)
+        {
+            try
+            {
+                if (idUser != null)
+                {
+                    AditionalAccountOperations ac = new AditionalAccountOperations();
+                    ac.DisableUser(idUser.idUser);
+                    return Request.CreateResponse(HttpStatusCode.OK, idUser);
+                }
+                else
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Parámetro nulo");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+            }
+        }
+
+        //PUT API/Account/Enable
+        [AllowAnonymous]
+        [HttpPut]
+        [Route("Enable")]
+        public HttpResponseMessage Enable([FromBody] IDUser idUser)
+        {
+            try
+            {
+                if (idUser != null)
+                {
+                    AditionalAccountOperations ac = new AditionalAccountOperations();
+                    ac.EnableUser(idUser.idUser);
+                    return Request.CreateResponse(HttpStatusCode.OK, idUser);
+                }
+                else
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Parámetro nulo");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+            }
         }
 
         // POST api/Account/RegisterExternal

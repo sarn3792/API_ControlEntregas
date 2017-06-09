@@ -12,6 +12,7 @@ namespace API_ControlEntregas.Models
     {
         //new properties
         public int fkCliente { get; set; }
+        public bool Enabled { get; set; }
 
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)

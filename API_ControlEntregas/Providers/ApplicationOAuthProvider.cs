@@ -39,6 +39,15 @@ namespace API_ControlEntregas.Providers
                 return;
             }
 
+             //validate the user is active
+            AditionalAccountOperations ac = new AditionalAccountOperations();
+            bool result = ac.IsEnable(context.UserName);
+            if(result == false)
+            {
+                context.SetError("invalid_user", "The username is disable");
+                return;
+            }
+
             ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager,
                OAuthDefaults.AuthenticationType);
             ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager,
