@@ -94,3 +94,4 @@ C:\Users\Samuel\documents\visual studio 2015\Projects\API_ControlEntregas\API_Co
 C:\Users\Samuel\documents\visual studio 2015\Projects\API_ControlEntregas\API_ControlEntregas\obj\Debug\API_ControlEntregas.csproj.GenerateResource.Cache
 C:\Users\Samuel\documents\visual studio 2015\Projects\API_ControlEntregas\API_ControlEntregas\obj\Debug\API_ControlEntregas.dll
 C:\Users\Samuel\documents\visual studio 2015\Projects\API_ControlEntregas\API_ControlEntregas\obj\Debug\API_ControlEntregas.pdb
+C:\Users\Samuel\documents\visual studio 2015\Projects\API_ControlEntregas\API_ControlEntregas\obj\Debug\API_ControlEntregas.csprojResolveAssemblyReference.cache

@@ -323,14 +323,14 @@ namespace API_ControlEntregas.Controllers
         // POST api/Account/Register
         [AllowAnonymous]
         [Route("Register")]
-        public async Task<IHttpActionResult> Register(RegisterBindingModel model/*, int fkCliente */)
+        public async Task<IHttpActionResult> Register(RegisterBindingModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email , fkCliente = model.fkCliente, Enabled = model.Enabled};
+            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email , fkCliente = model.fkCliente, Enabled = model.Enabled, FullName = model.FullName, Position = model.Position};
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
@@ -346,14 +346,14 @@ namespace API_ControlEntregas.Controllers
         [AllowAnonymous]
         [HttpPut]
         [Route("Disable")]
-        public HttpResponseMessage Disable([FromBody] IDUser idUser)
+        public async Task<HttpResponseMessage> Disable([FromBody] IDUser idUser)
         {
             try
             {
                 if (idUser != null)
                 {
                     AditionalAccountOperations ac = new AditionalAccountOperations();
-                    ac.DisableUser(idUser.idUser);
+                    await ac.DisableUser(idUser.idUser);
                     return Request.CreateResponse(HttpStatusCode.OK, idUser);
                 }
                 else
@@ -371,14 +371,14 @@ namespace API_ControlEntregas.Controllers
         [AllowAnonymous]
         [HttpPut]
         [Route("Enable")]
-        public HttpResponseMessage Enable([FromBody] IDUser idUser)
+        public async Task<HttpResponseMessage> Enable([FromBody] IDUser idUser)
         {
             try
             {
                 if (idUser != null)
                 {
                     AditionalAccountOperations ac = new AditionalAccountOperations();
-                    ac.EnableUser(idUser.idUser);
+                    await ac.EnableUser(idUser.idUser);
                     return Request.CreateResponse(HttpStatusCode.OK, idUser);
                 }
                 else

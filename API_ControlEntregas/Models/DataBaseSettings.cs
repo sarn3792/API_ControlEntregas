@@ -5,6 +5,7 @@ using System.Web;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Threading.Tasks;
 
 namespace API_ControlEntregas.Models
 {
@@ -28,14 +29,14 @@ namespace API_ControlEntregas.Models
             }
         }
 
-        public DataTable GetDataTable(String query)
+        public async Task<DataTable> GetDataTable(String query)
         {
             try
             {
                 cmd = new SqlCommand(query, conn);
                 cmd.CommandTimeout = 0;
                 conn.Open();
-                reader = cmd.ExecuteReader();
+                reader = await cmd.ExecuteReaderAsync();
                 data.Load(reader);
                 return data;
             } catch (Exception ex)
@@ -48,7 +49,7 @@ namespace API_ControlEntregas.Models
             }
         }
 
-        public void ExecuteQuery(String query)
+        public async Task ExecuteQuery(String query)
         {
             try
             {
@@ -56,7 +57,7 @@ namespace API_ControlEntregas.Models
                 cmd.CommandTimeout = 0;
                 conn.Open();
                 cmd.CommandType = CommandType.Text;
-                cmd.ExecuteNonQuery();
+                await cmd.ExecuteNonQueryAsync();
             } catch (Exception ex)
             {
                 throw ex;

@@ -56,6 +56,14 @@ namespace API_ControlEntregas.Models
 
         [Display(Name = "Enabled")]
         public bool Enabled { get; set; }
+
+        [Required]
+        [Display(Name = "FullName")]
+        public string FullName { get; set; }
+
+        [Required]
+        [Display(Name = "Position")]
+        public string Position { get; set; }
     }
 
     public class RegisterExternalBindingModel

@@ -41,7 +41,7 @@ namespace API_ControlEntregas.Providers
 
              //validate the user is active
             AditionalAccountOperations ac = new AditionalAccountOperations();
-            bool result = ac.IsEnable(context.UserName);
+            bool result = await ac.IsEnable(context.UserName);
             if(result == false)
             {
                 context.SetError("invalid_user", "The username is disable");

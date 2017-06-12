@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using API_ControlEntregas.Models;
+using System.Threading.Tasks;
 
 namespace API_ControlEntregas.Controllers
 {
@@ -14,12 +15,12 @@ namespace API_ControlEntregas.Controllers
     {
         [HttpGet]
         [Route("api/Clientes")]
-        public HttpResponseMessage Get()
+        public async Task <HttpResponseMessage> Get()
         {
             try
             {
                 ClienteModel model = new ClienteModel();
-                List<Cliente> data = model.Get();
+                List<Cliente> data = await model.Get();
                 if(data.Count > 0)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, data);
@@ -36,7 +37,7 @@ namespace API_ControlEntregas.Controllers
 
         [HttpPost]
         [Route("api/Clientes")]
-        public HttpResponseMessage Post([FromBody] Cliente data)
+        public async Task<HttpResponseMessage> Post([FromBody] Cliente data)
         {
             try
             {
@@ -47,7 +48,7 @@ namespace API_ControlEntregas.Controllers
                 else
                 {
                     ClienteModel model = new ClienteModel();
-                    model.Insert(data);
+                    await model.Insert(data);
                     return Request.CreateResponse(HttpStatusCode.Created, data);
                 }
             } catch (Exception ex)
@@ -58,7 +59,7 @@ namespace API_ControlEntregas.Controllers
 
         [HttpPut]
         [Route("api/Clientes/Estatus")]
-        public HttpResponseMessage Put([FromBody] Cliente data)
+        public async Task <HttpResponseMessage> Put([FromBody] Cliente data)
         {
             try
             {
@@ -69,7 +70,7 @@ namespace API_ControlEntregas.Controllers
                 else
                 {
                     ClienteModel model = new ClienteModel();
-                    model.UpdateStatus(data);
+                    await model.UpdateStatus(data);
                     return Request.CreateResponse(HttpStatusCode.OK, data);
                 }
             } catch (Exception ex)

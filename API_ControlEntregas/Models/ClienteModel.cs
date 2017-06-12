@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace API_ControlEntregas.Models
 {
     public class ClienteModel
     {
-        public List<Cliente> Get()
+        public async Task <List<Cliente>> Get()
         {
             try
             {
                 String query = String.Format("SELECT * FROM Clientes");
                 DataBaseSettings db = new DataBaseSettings();
-                DataTable aux = db.GetDataTable(query);
+                DataTable aux = await db.GetDataTable(query);
 
                 List<Cliente> data = aux.AsEnumerable().Select(m => new Cliente()
                 {
@@ -34,7 +35,7 @@ namespace API_ControlEntregas.Models
             }
         }
 
-        public void Insert(Cliente data)
+        public async Task Insert(Cliente data)
         {
             try
             {
@@ -53,20 +54,20 @@ namespace API_ControlEntregas.Models
                                                ,'{4}'
                                                ,{5})", data.nombreEmpresa, data.contactoSistemas, data.telefono, data.email, data.grupo, data.activo == true ? 1 : 0);
                 DataBaseSettings db = new DataBaseSettings();
-                db.ExecuteQuery(query);
+                await db.ExecuteQuery(query);
             } catch (Exception ex)
             {
                 throw ex;
             }
         }
 
-        public void UpdateStatus(Cliente data)
+        public async Task UpdateStatus(Cliente data)
         {
             try
             {
                 String query = String.Format("UPDATE Clientes SET Estatus = {0} WHERE IDCliente = {1}", data.activo == true ? 1 : 0, data.idCliente);
                 DataBaseSettings db = new DataBaseSettings();
-                db.ExecuteQuery(query);
+                await db.ExecuteQuery(query);
             } catch (Exception ex)
             {
                 throw ex;
