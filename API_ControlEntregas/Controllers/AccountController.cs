@@ -321,6 +321,7 @@ namespace API_ControlEntregas.Controllers
         }
 
         // POST api/Account/Register
+        // new properties were added
         [AllowAnonymous]
         [Route("Register")]
         public async Task<IHttpActionResult> Register(RegisterBindingModel model)
@@ -345,16 +346,16 @@ namespace API_ControlEntregas.Controllers
         //PUT API/Account/Disable
         [AllowAnonymous]
         [HttpPut]
-        [Route("Disable")]
-        public async Task<HttpResponseMessage> Disable([FromBody] IDUser idUser)
+        [Route("UpdateStatus")]
+        public async Task<HttpResponseMessage> UpdateStatus([FromBody] IDUser user)
         {
             try
             {
-                if (idUser != null)
+                if (user != null)
                 {
                     AditionalAccountOperations ac = new AditionalAccountOperations();
-                    await ac.DisableUser(idUser.idUser);
-                    return Request.CreateResponse(HttpStatusCode.OK, idUser);
+                    await ac.UpdateStatus(user);
+                    return Request.CreateResponse(HttpStatusCode.OK, user);
                 }
                 else
                 {
@@ -367,26 +368,33 @@ namespace API_ControlEntregas.Controllers
             }
         }
 
-        //PUT API/Account/Enable
+        //GET api/Account/GetUsers
         [AllowAnonymous]
-        [HttpPut]
-        [Route("Enable")]
-        public async Task<HttpResponseMessage> Enable([FromBody] IDUser idUser)
+        [HttpGet]
+        [Route("GetUsers")]
+        public async Task<HttpResponseMessage> GetUsers([FromUri]int customer)
         {
             try
             {
-                if (idUser != null)
+                if (customer != 0) //zero is equals to null
                 {
                     AditionalAccountOperations ac = new AditionalAccountOperations();
-                    await ac.EnableUser(idUser.idUser);
-                    return Request.CreateResponse(HttpStatusCode.OK, idUser);
+                    List<IDUser> data = await ac.GetUsers(customer);
+                    if (data.Count > 0)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.OK, data);
+                    }
+                    else
+                    {
+                        return Request.CreateResponse(HttpStatusCode.NotFound, "No fueron encontrados usuarios para este cliente");
+                    }
                 }
                 else
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Parámetro nulo");
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
             }

@@ -10,7 +10,6 @@ namespace API_ControlEntregas.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            ContextKey = "API_ControlEntregas.Models.ApplicationDbContext";
         }
 
         protected override void Seed(API_ControlEntregas.Models.ApplicationDbContext context)

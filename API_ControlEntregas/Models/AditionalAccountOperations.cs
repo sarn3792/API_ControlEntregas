@@ -25,26 +25,42 @@ namespace API_ControlEntregas.Models
             }
         }
 
-        public async Task DisableUser(String id)
+        public async Task UpdateStatus(IDUser user)
         {
             try
             {
-                String query = String.Format("UPDATE AspNetUsers SET Enabled = 0 WHERE ID = '{0}'", id);
+                String query = String.Format("UPDATE AspNetUsers SET Enabled = {0} WHERE ID = '{1}'", user.status == true ? 1 : 0, user.idUser);
                 DataBaseSettings db = new DataBaseSettings();
                 await db.ExecuteQuery(query);
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
         }
 
-        public async Task EnableUser(String id)
+        public async Task<List<IDUser>> GetUsers(int fkCustomer)
         {
             try
             {
-                String query = String.Format("UPDATE AspNetUsers SET Enabled = 1 WHERE ID = '{0}'", id);
+                String query = String.Format(@"SELECT U.Id, U.FullName, C.NombreEmpresa, U.Position, U.Email, U.Enabled
+                                            FROM AspNetUsers U
+                                            INNER JOIN Clientes C ON U.fkCliente = C.IDCliente
+                                            WHERE U.fkCliente = {0}", fkCustomer);
                 DataBaseSettings db = new DataBaseSettings();
-                await db.ExecuteQuery(query);
+                DataTable aux = await db.GetDataTable(query);
+
+                List<IDUser> data = aux.AsEnumerable().Select(m => new IDUser()
+                {
+                    idUser = m.Field<String>("Id"),
+                    enterprise = m.Field<String>("NombreEmpresa"),
+                    status = m.Field<bool>("Enabled"),
+                    fullName = m.Field<String>("FullName"),
+                    position = m.Field<String>("Position"),
+                    email = m.Field<String>("Email")
+                }).ToList();
+
+                return data;
             }
             catch (Exception ex)
             {

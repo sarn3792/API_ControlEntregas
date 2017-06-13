@@ -3,7 +3,7 @@ namespace API_ControlEntregas.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialCreate : DbMigration
+    public partial class Initial : DbMigration
     {
         public override void Up()
         {
@@ -35,6 +35,10 @@ namespace API_ControlEntregas.Migrations
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 128),
+                        fkCliente = c.Int(nullable: false),
+                        Enabled = c.Boolean(nullable: false),
+                        FullName = c.String(),
+                        Position = c.String(),
                         Email = c.String(maxLength: 256),
                         EmailConfirmed = c.Boolean(nullable: false),
                         PasswordHash = c.String(),
