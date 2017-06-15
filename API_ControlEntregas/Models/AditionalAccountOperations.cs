@@ -67,5 +67,19 @@ namespace API_ControlEntregas.Models
                 throw ex;
             }
         }
+
+        public async Task Delete(String idUser)
+        {
+            try
+            {
+                String query = String.Format("DELETE FROM AspNetUsers WHERE Id = '{0}'", idUser);
+                DataBaseSettings db = new DataBaseSettings();
+                await db.ExecuteQuery(query);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

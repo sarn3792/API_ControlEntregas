@@ -320,6 +320,7 @@ namespace API_ControlEntregas.Controllers
             return logins;
         }
 
+        #region Methods modified
         // POST api/Account/Register
         // new properties were added
         [AllowAnonymous]
@@ -380,14 +381,7 @@ namespace API_ControlEntregas.Controllers
                 {
                     AditionalAccountOperations ac = new AditionalAccountOperations();
                     List<IDUser> data = await ac.GetUsers(customer);
-                    if (data.Count > 0)
-                    {
-                        return Request.CreateResponse(HttpStatusCode.OK, data);
-                    }
-                    else
-                    {
-                        return Request.CreateResponse(HttpStatusCode.NotFound, "No fueron encontrados usuarios para este cliente");
-                    }
+                    return Request.CreateResponse(HttpStatusCode.OK, data);
                 }
                 else
                 {
@@ -399,6 +393,33 @@ namespace API_ControlEntregas.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
             }
         }
+
+        //Delete api/Account/id
+        [AllowAnonymous]
+        [HttpDelete]
+        [Route("Delete/{idUser}")]
+        public async Task<HttpResponseMessage> Delete(String idUser)
+        {
+            try
+            {
+                if (idUser == null || idUser.Trim() == String.Empty)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Parámetro nulo");
+                }
+                else
+                {
+                    AditionalAccountOperations ac = new AditionalAccountOperations();
+                    await ac.Delete(idUser);
+                    return Request.CreateResponse(HttpStatusCode.OK, idUser);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+            }
+        }
+
+        #endregion
 
         // POST api/Account/RegisterExternal
         [OverrideAuthentication]
