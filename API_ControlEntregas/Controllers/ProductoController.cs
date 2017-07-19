@@ -15,19 +15,26 @@ namespace API_ControlEntregas.Controllers
     {
         [HttpGet]
         [Route("api/Clientes/{idCliente}/Productos")]
-        public async Task <HttpResponseMessage> Get(int idCliente)
+        public async Task <HttpResponseMessage> Get(Int64? idCliente)
         {
             try
             {
-                ProductoModel model = new ProductoModel();
-                List<Producto> data = await model.Get(idCliente);
-                if(data.Count > 0)
+                if (idCliente != null)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, data);
+                    ProductoModel model = new ProductoModel();
+                    List<Producto> data = await model.Get(idCliente);
+                    if (data.Count > 0)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.OK, data);
+                    }
+                    else
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No fueron encontrados productos");
+                    }
                 }
                 else
                 {
-                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No fueron encontrados productos");
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Parámetro nulo");
                 }
             }
             catch (Exception ex)

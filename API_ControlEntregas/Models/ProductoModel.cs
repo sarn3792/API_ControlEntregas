@@ -9,7 +9,7 @@ namespace API_ControlEntregas.Models
 {
     public class ProductoModel
     {
-        public async Task<List<Producto>> Get(int idCliente)
+        public async Task<List<Producto>> Get(Int64? idCliente)
         {
             try
             {
