@@ -13,7 +13,7 @@ namespace API_ControlEntregas.Controllers
     [EnableCorsAttribute("*", "*", "*")]
     public class HistorialEntregasController : ApiController
     {
-        [HttpPut]
+        [HttpPost]
         [Route("api/OrdenesEntrega/{idOrdenEntrega}/HistorialEntrega")]
         public async Task<HttpResponseMessage> Insert([FromBody] HistorialEntregas data, [FromUri] Int64? idOrdenEntrega)
         {
@@ -23,7 +23,7 @@ namespace API_ControlEntregas.Controllers
                 {
                     HistorialEntregasModel model = new HistorialEntregasModel();
                     data.idOrdenEntrega = idOrdenEntrega;
-                    Int64 idHistorialEntrega = await model.Insert(data);
+                    Int64? idHistorialEntrega = await model.Insert(data);
 
                     if (data.fotos.Count > 0)
                     {
@@ -47,23 +47,27 @@ namespace API_ControlEntregas.Controllers
             }
         }
 
-        //public async Task<HttpResponseMessage> Get([FromBody] HistorialEntregas data, [FromUri] Int64? idOrdenEntrega)
-        //{
-        //    try
-        //    {
-        //        if(data != null && idOrdenEntrega != null)
-        //        {
-
-        //        }
-        //        else
-        //        {
-        //            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Parámetro nulo");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
-        //    }
-        //}
+        [HttpGet]
+        [Route("api/OrdenesEntrega/{idOrdenEntrega}/HistorialEntrega/{idHistorialEntrega}")]
+        public async Task<HttpResponseMessage> Get([FromUri] Int64? idHistorialEntrega)
+        {
+            try
+            {
+                if (idHistorialEntrega != null)
+                {
+                    HistorialEntregasModel model = new HistorialEntregasModel();
+                    HistorialEntregas data = await model.GetSpecific(idHistorialEntrega);
+                    return Request.CreateResponse(HttpStatusCode.OK, data);
+                }
+                else
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Parámetro nulo");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+            }
+        }
     }
 }

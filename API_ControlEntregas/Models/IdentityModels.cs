@@ -11,11 +11,11 @@ namespace API_ControlEntregas.Models
     public class ApplicationUser : IdentityUser
     {
         //new properties
-        public int fkCliente { get; set; }
+        public Int64? fkCliente { get; set; }
         public bool Enabled { get; set; }
         public string FullName { get; set; }
         public string Position { get; set; }
-
+        //public string IDUsuario { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)
         {

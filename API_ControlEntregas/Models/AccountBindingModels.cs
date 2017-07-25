@@ -52,7 +52,7 @@ namespace API_ControlEntregas.Models
         // new Properties
         [Required]
         [Display(Name = "fkCliente")]
-        public int fkCliente { get; set; }
+        public Int64? fkCliente { get; set; }
 
         [Display(Name = "Enabled")]
         public bool Enabled { get; set; }

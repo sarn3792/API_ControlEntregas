@@ -53,7 +53,7 @@ namespace API_ControlEntregas.Providers
             ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager,
                 CookieAuthenticationDefaults.AuthenticationType);
 
-            AuthenticationProperties properties = CreateProperties(user.UserName);
+            AuthenticationProperties properties = CreateProperties(user);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
             context.Request.Context.Authentication.SignIn(cookiesIdentity);
@@ -66,6 +66,8 @@ namespace API_ControlEntregas.Providers
                 context.AdditionalResponseParameters.Add(property.Key, property.Value);
             }
 
+            //Return userID
+            context.AdditionalResponseParameters.Add("userID", context.Identity.GetUserId());
             return Task.FromResult<object>(null);
         }
 
@@ -95,11 +97,13 @@ namespace API_ControlEntregas.Providers
             return Task.FromResult<object>(null);
         }
 
-        public static AuthenticationProperties CreateProperties(string userName)
+        public static AuthenticationProperties CreateProperties(ApplicationUser information)
         {
             IDictionary<string, string> data = new Dictionary<string, string>
             {
-                { "userName", userName }
+                { "userName", information.UserName },
+                {"customerID", information.fkCliente.ToString() }
+                //,{"idUsuario", information.IDUsuario }
             };
             return new AuthenticationProperties(data);
         }
