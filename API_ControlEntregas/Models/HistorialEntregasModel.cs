@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -45,7 +46,7 @@ namespace API_ControlEntregas.Models
                     String query = String.Format(@"INSERT INTO Fotos
                                                    (IDHistorialEntrega, Foto)
                                                     VALUES
-                                                    ({0}, CONVERT(VARBINARY(MAX), '{1}{2}', 1))", data.idHistorialEntrega, "0x", BitConverter.ToString(array).Replace("-", string.Empty).ToLower());
+                                                    ({0}, CONVERT(VARBINARY(MAX), '{1}{2}', 1))", data.idHistorialEntrega, "0x", new StringBuilder(BitConverter.ToString(array).ToLower()).Replace("-", string.Empty));
                     DataBaseSettings db = new DataBaseSettings();
                     await db.ExecuteQuery(query);
                 }
@@ -65,7 +66,7 @@ namespace API_ControlEntregas.Models
                     String query = String.Format(@"INSERT INTO Firmas
                                                    (IDHistorialEntrega, Firma)
                                                     VALUES
-                                                    ({0}, CONVERT(VARBINARY(MAX), '{1}{2}', 1))", data.idHistorialEntrega, "0x", BitConverter.ToString(array).Replace("-", string.Empty).ToLower());
+                                                    ({0}, CONVERT(VARBINARY(MAX), '{1}{2}', 1))", data.idHistorialEntrega, "0x", new StringBuilder(BitConverter.ToString(array).ToLower()).Replace("-", string.Empty));
                     DataBaseSettings db = new DataBaseSettings();
                     await db.ExecuteQuery(query);
                 }

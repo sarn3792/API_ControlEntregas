@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 using API_ControlEntregas.Models;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace API_ControlEntregas.Controllers
 {
@@ -15,26 +16,37 @@ namespace API_ControlEntregas.Controllers
     {
         [HttpPost]
         [Route("api/OrdenesEntrega/{idOrdenEntrega}/HistorialEntrega")]
-        public async Task<HttpResponseMessage> Insert([FromBody] HistorialEntregas data, [FromUri] Int64? idOrdenEntrega)
+        public async Task<HttpResponseMessage> Insert([FromUri] Int64? idOrdenEntrega)
         {
             try
             {
-                if (data != null && idOrdenEntrega != null)
+                if (idOrdenEntrega != null)
                 {
-                    HistorialEntregasModel model = new HistorialEntregasModel();
-                    data.idOrdenEntrega = idOrdenEntrega;
-                    Int64? idHistorialEntrega = await model.Insert(data);
-
-                    if (data.fotos.Count > 0)
+                    var result = await Request.Content.ReadAsMultipartAsync();
+                    var requestJson = await result.Contents[0].ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<HistorialEntregas>(requestJson);
+                    if (data != null)
                     {
-                        await model.GuardarFotos(new Images(idHistorialEntrega, data.fotos));
-                    }
 
-                    if (data.firmas.Count > 0)
-                    {
-                        await model.GuardarFirmas(new Images(idHistorialEntrega, data.firmas));
+                        HistorialEntregasModel model = new HistorialEntregasModel();
+                        data.idOrdenEntrega = idOrdenEntrega;
+                        Int64? idHistorialEntrega = await model.Insert(data);
+
+                        if (data.fotos.Count > 0)
+                        {
+                            await model.GuardarFotos(new Images(idHistorialEntrega, data.fotos));
+                        }
+
+                        if (data.firmas.Count > 0)
+                        {
+                            await model.GuardarFirmas(new Images(idHistorialEntrega, data.firmas));
+                        }
+                        return Request.CreateResponse(HttpStatusCode.Created);
                     }
-                    return Request.CreateResponse(HttpStatusCode.Created, data);
+                    else
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Parámetro nulo");
+                    }
                 }
                 else
                 {
